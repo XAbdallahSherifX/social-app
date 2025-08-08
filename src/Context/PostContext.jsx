@@ -1,8 +1,6 @@
 import axios from "axios";
 import { createContext } from "react";
-
 export let PostContext = createContext();
-
 export default function PostContextProvider(props) {
   function getAllPosts() {
     return axios

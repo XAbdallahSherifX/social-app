@@ -6,11 +6,13 @@ import Profile from "./Components/Profile/Profile";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import NotFound from "./Components/NotFound/NotFound";
-import CounterContextProvider from "./Context/CounterContext";
 import UserContextProvider from "./Context/UserContext";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import PostContextProvider from "./Context/PostContext";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import SinglePost from "./Components/SinglePost/SinglePost";
+const query = new QueryClient();
 const x = createBrowserRouter([
   {
     path: "",
@@ -32,6 +34,14 @@ const x = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "singlePost/:id",
+        element: (
+          <ProtectedRoute>
+            <SinglePost />
+          </ProtectedRoute>
+        ),
+      },
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
       { path: "*", element: <NotFound /> },
@@ -42,11 +52,12 @@ export default function App() {
   return (
     <>
       <UserContextProvider>
-        <PostContextProvider>
-          <CounterContextProvider>
-            <RouterProvider router={x}></RouterProvider>
-          </CounterContextProvider>
-        </PostContextProvider>
+          <PostContextProvider>
+            <QueryClientProvider client={query}>
+              <RouterProvider router={x}></RouterProvider>
+              <ReactQueryDevtools />
+            </QueryClientProvider>
+          </PostContextProvider>
       </UserContextProvider>
     </>
   );

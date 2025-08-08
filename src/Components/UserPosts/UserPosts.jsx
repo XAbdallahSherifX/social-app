@@ -1,27 +1,26 @@
-import React, { useContext, useEffect, useState } from "react";
-import styles from "./Home.module.css";
-import Profile from "./../Profile/Profile";
-import Footer from "./../Footer/Footer";
-import { PostContext } from "../../Context/PostContext";
+import React from "react";
+import "./UserPosts.module.css";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import defaultUserImage from "../../assets/istockphoto-1332100919-612x612.jpg";
 import axios from "axios";
-import Comment from './../Comment/Comment';
-import { Link } from 'react-router-dom';
-import CreateComment from './../CreateComment/CreateComment';
-export default function Home() {
-  const getPosts = () =>
-    axios.get("https://linked-posts.routemisr.com/posts?limit=50", {
-      headers: { token: localStorage.getItem("userToken") },
-    });
-  let { data, error, isError, isLoading } = useQuery({
-    queryKey: ["getPosts"],
-    queryFn: getPosts,
+import Comment from "./../Comment/Comment";
+import CreateComment from "./../CreateComment/CreateComment";
+export default function UserPosts() {
+  const getUserPost = () =>
+    axios.get(
+      `https://linked-posts.routemisr.com/users/664bcf3e33da217c4af21f00/posts?limit=2`,
+      {
+        headers: { token: localStorage.getItem("userToken") },
+      }
+    );
+  let { data, isError, error, isLoading } = useQuery({
+    queryKey: ["getUserPost"],
+    queryFn: getUserPost,
   });
   if (isError) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-        <h1 className="p-4 text-2xl w-full sm:w-1/2 text-center mx-auto text-red-800 rounded-lg bg-red-50 border-1 border-red-300 ">
+        <h1 className="p-4 text-2xl w-full sm:w-1/2 text-center mx-auto text-red-800 rounded-lg bg-red-50 border-1 border-red-300">
           {error.message}
         </h1>
       </div>
@@ -29,8 +28,8 @@ export default function Home() {
   }
   if (isLoading) {
     return (
-      <div className="pt-14">
-        <div className="w-full mx-auto md:w-[70%] lg:w-[45%] my-12 py-6 px-3.5 rounded-xl animate-pulse bg-radial from-cyan-800 to-cyan-900">
+      <div>
+        <div className="w-full mx-auto md:w-[70%] lg:w-[60%] my-12 py-6 px-3.5 rounded-xl animate-pulse bg-radial from-cyan-800 to-cyan-900">
           <div className="post">
             <div className="mb-3">
               <div className="flex items-center gap-4">
@@ -45,7 +44,7 @@ export default function Home() {
             </div>
             <>
               <h3 className="h-3 bg-gray-300 rounded-full w-full mb-4"></h3>
-              <div className="animate-pulse w-full bg-gray-300 h-96 rounded-lg mb-5 flex justify-center items-center">
+              <div className="animate-pulse w-full bg-gray-300 h-[500px] rounded-lg mb-5 flex justify-center items-center">
                 <svg
                   className="w-8 h-8 stroke-gray-400"
                   viewBox="0 0 24 24"
@@ -76,7 +75,7 @@ export default function Home() {
     );
   }
   return (
-    <div className="py-14">
+    <div className="py-12">
       {data?.data?.posts.map((post) => (
         <div
           key={post.id}
@@ -114,9 +113,9 @@ export default function Home() {
             )}
             <Comment comment={post.comments[0]} />
           </div>
-          <hr className="mt-2 border-1 border-gray-400" />
-          <div className="flex justify-between">
-            <CreateComment postId={post.id}/>
+          <hr className="mt-2 mx-4 border-1 border-gray-400" />
+          <div className="flex justify-between mx-4">
+            <CreateComment postId={post.id} />
             <Link
               to={`/singlePost/${post.id}`}
               className="text-center text-gray-300 cursor-pointer sm:text-lg text-sm mt-2 hover:text-white hover:underline hover:underline-offset-3 duration-300"

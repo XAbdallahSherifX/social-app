@@ -6,11 +6,13 @@ import Footer from "./../Footer/Footer";
 export default function Layout() {
   return (
     <>
-      <Navbar />
-      <div className="container px-1.5 mt-28 mx-auto">
-        <Outlet />
+      <div className="bg-slate-950 min-h-screen selection:bg-slate-300 selection:text-slate-700 overflow-auto">
+        <Navbar />
+        <div className="container px-1.5 mx-auto">
+          <Outlet />
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </>
   );
 }

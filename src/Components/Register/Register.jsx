@@ -50,7 +50,7 @@ export default function Register() {
     resolver: zodResolver(schema),
   });
 
-  function userData(values) {
+  function sendUserData(values) {
     setisLoading(true);
     console.log(values);
     axios
@@ -69,7 +69,7 @@ export default function Register() {
       });
   }
   return (
-    <>
+    <div className="pt-24 pb-10 text-white">
       <h1 className="text-center text-4xl font-extralight font-mono py-10">
         Create a new account
       </h1>
@@ -80,7 +80,7 @@ export default function Register() {
       )}
       <form
         className="w-full mx-auto md:w-[50%]"
-        onSubmit={handleSubmit(userData)}
+        onSubmit={handleSubmit(sendUserData)}
       >
         <div className="flex flex-col mb-5 gap-y-2">
           <input
@@ -207,7 +207,7 @@ export default function Register() {
         <button
           disabled={isLoading}
           type="submit"
-          className="group/button w-full  relative inline-flex items-center justify-center overflow-hidden rounded-full bg-slate-700 backdrop-blur-lg px-6 py-2 text-base font-semibold text-white transition-all duration-300 ease-in-out hover:-translate-y-1 active:translate-y-1 hover:shadow-xl hover:shadow-gray-600/50 border border-white/20 cursor-pointer disabled:bg-gray-600"
+          className="group/button w-full  relative inline-flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 backdrop-blur-lg px-6 py-2 text-base font-semibold text-white transition-all duration-300 ease-in-out hover:-translate-y-1 active:translate-y-1 hover:shadow-xl hover:shadow-gray-600/50 border border-white/20 cursor-pointer disabled:bg-gray-600"
         >
           <span className="text-lg">
             {isLoading ? (
@@ -221,6 +221,6 @@ export default function Register() {
           </div>
         </button>
       </form>
-    </>
+    </div>
   );
 }
