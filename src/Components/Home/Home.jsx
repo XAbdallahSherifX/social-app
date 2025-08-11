@@ -1,17 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import styles from "./Home.module.css";
-import Profile from "./../Profile/Profile";
-import Footer from "./../Footer/Footer";
 import { PostContext } from "../../Context/PostContext";
 import { useQuery } from "@tanstack/react-query";
-import defaultUserImage from "../../assets/istockphoto-1332100919-612x612.jpg";
 import axios from "axios";
-import Comment from './../Comment/Comment';
-import { Link } from 'react-router-dom';
-import CreateComment from './../CreateComment/CreateComment';
+import Comment from "./../Comment/Comment";
+import { Link } from "react-router-dom";
+import CreateComment from "./../CreateComment/CreateComment";
+import CreatePost from "./../CreatePost/CreatePost";
+import PostOptions from "./../PostOptions/PostOptions";
+import { UserDataContext } from "./../../Context/UserDataContext";
 export default function Home() {
+  let { userData } = useContext(UserDataContext);
   const getPosts = () =>
-    axios.get("https://linked-posts.routemisr.com/posts?limit=50", {
+    axios.get("https://linked-posts.routemisr.com/posts?page=108&limit=50", {
       headers: { token: localStorage.getItem("userToken") },
     });
   let { data, error, isError, isLoading } = useQuery({
@@ -30,7 +30,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="pt-14">
-        <div className="w-full mx-auto md:w-[70%] lg:w-[45%] my-12 py-6 px-3.5 rounded-xl animate-pulse bg-radial from-cyan-800 to-cyan-900">
+        <div className="w-full mx-auto md:w-[70%] lg:w-[50%] my-12 py-6 px-3.5 rounded-xl animate-pulse bg-radial from-cyan-800 to-cyan-900">
           <div className="post">
             <div className="mb-3">
               <div className="flex items-center gap-4">
@@ -76,26 +76,42 @@ export default function Home() {
     );
   }
   return (
-    <div className="py-14">
+    <div className="py-20">
+      <CreatePost />
       {data?.data?.posts.map((post) => (
         <div
           key={post.id}
-          className="w-full mx-auto md:w-[70%] lg:w-[45%] my-12 py-6 px-3.5 rounded-xl bg-radial from-cyan-800 to-cyan-900 text-white"
+          className="w-full mx-auto md:w-[70%] lg:w-[50%] my-12 py-6 px-3.5 rounded-xl bg-radial from-cyan-800 to-cyan-900 text-white"
         >
           <div className="post">
             <div className="mb-3">
-              <div className="flex items-center gap-4">
-                <img
-                  src={post.user.photo}
-                  className="size-14 rounded-full border-2 bg-white border-slate-900"
-                  alt={post.user.photo}
-                />
-                <div>
-                  <span className="text-lg font-[600]">{post.user.name}</span>
-                  <p className=" text-slate-300 text-xs">
-                    {new Date(post.createdAt).toLocaleString()}
-                  </p>
-                </div>
+              <div className="flex justify-between items-center">
+                <Link to={`/singlePost/${post.id}`}>
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={post.user.photo}
+                      className="size-14 rounded-full border-2 bg-white border-slate-900"
+                      alt={post.user.photo}
+                    />
+                    <div>
+                      <span className="text-lg font-[600]">
+                        {post.user.name}
+                      </span>
+                      <p className=" text-slate-300 text-xs">
+                        {new Date(post.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+                {userData?._id === post?.user?._id ? (
+                  <PostOptions
+                    id={post?.id}
+                    body={post?.body}
+                    image={post?.image}
+                  />
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             {post.image ? (
@@ -112,18 +128,13 @@ export default function Home() {
             ) : (
               <h3 className="mt-4">{post.body}</h3>
             )}
-            <Comment comment={post.comments[0]} />
+            {post?.comments.length > 0 && (
+              <>
+                <Comment comment={post?.comments[0]} />
+              </>
+            )}
           </div>
-          <hr className="mt-2 border-1 border-gray-400" />
-          <div className="flex justify-between">
-            <CreateComment postId={post.id}/>
-            <Link
-              to={`/singlePost/${post.id}`}
-              className="text-center text-gray-300 cursor-pointer sm:text-lg text-sm mt-2 hover:text-white hover:underline hover:underline-offset-3 duration-300"
-            >
-              Show All Comments
-            </Link>
-          </div>
+          <CreateComment postId={post.id} />
         </div>
       ))}
     </div>

@@ -4,7 +4,7 @@ import error from "../../assets/404 Error Page not Found with people connecting 
 export default function NotFound() {
   return (
     <div className="w-full mt-20 flex justify-center">
-      <img src={error} className="w-4/9" alt="" />
+      <img src={error} className="max-sm:w-[320px] w-[600px]" alt="" />
     </div>
   );
 }

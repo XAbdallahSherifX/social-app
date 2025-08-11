@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import "./Navbar.module.css";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import myImage from "../../assets/istockphoto-1332100919-612x612.jpg";
-import { UserContext } from "../../Context/UserContext";
+import { UserTokenContext } from "../../Context/UserToken";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 export default function Navbar() {
@@ -16,10 +16,10 @@ export default function Navbar() {
     select: (data) => data?.data?.user,
   });
   let navigate = useNavigate();
-  let { userLogin, setuserLogin } = useContext(UserContext);
+  let { userToken, setUserToken } = useContext(UserTokenContext);
   function signout() {
     localStorage.removeItem("userToken");
-    setuserLogin(null);
+    setUserToken(null);
     navigate("/login");
     setMenuAppearance(false);
   }
@@ -37,7 +37,7 @@ export default function Navbar() {
           <div className="relative">
             <div className="flex items-center gap-4">
               <div className={`items-center`}>
-                {userLogin !== null ? (
+                {userToken !== null ? (
                   <div
                     onBlur={() => setMenuAppearance(false)}
                     onClick={() => showMenu()}
@@ -46,12 +46,12 @@ export default function Navbar() {
                   >
                     {data?.photo ? (
                       <img
-                        className="w-full border-solid rounded-full"
+                        className="w-full object-cover h-full border-solid rounded-full"
                         src={data.photo}
                       />
                     ) : (
                       <img
-                        className="w-full border-solid rounded-full"
+                        className="w-full object-cover  border-solid rounded-full"
                         src={myImage}
                       />
                     )}
@@ -61,14 +61,18 @@ export default function Navbar() {
                         className={`w-[225px] bg-slate-800 absolute right-[10px] cursor-auto top-[70px] flex flex-col rounded-xl p-3 gap-y-3 text-left`}
                       >
                         <div>
-                          <h1 className="text-xl font-bold break-all">
-                            {data?.name
-                              ? data?.name.charAt(0).toUpperCase() +
-                                data?.name.slice(1)
-                              : "Name"}
-                          </h1>
+                          {data?.name ? (
+                            <>
+                              <h1 className="text-xl mb-1 font-bold break-all">
+                                {data?.name.charAt(0).toUpperCase() +
+                                  data?.name.slice(1)}
+                              </h1>
+                              <hr />
+                            </>
+                          ) : (
+                            ""
+                          )}
                         </div>
-                        <hr />
                         <div
                           onMouseDown={() => {
                             navigate("/");

@@ -5,9 +5,11 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../Context/UserContext";
+import { UserTokenContext } from "../../Context/UserToken";
+import { useQueryClient } from "@tanstack/react-query";
 export default function Login() {
-  let { setuserLogin } = useContext(UserContext);
+  let myQuery = useQueryClient();
+  let { setUserToken } = useContext(UserTokenContext);
   const [apiError, setapiError] = useState(null);
   const [isLoading, setisLoading] = useState(false);
   const navigate = useNavigate();
@@ -28,7 +30,6 @@ export default function Login() {
     },
     resolver: zodResolver(schema),
   });
-
   function HandleLogin(values) {
     setisLoading(true);
     axios
@@ -37,7 +38,8 @@ export default function Login() {
         if (res.data.message === "success") {
           setisLoading(false);
           localStorage.setItem("userToken", res.data.token);
-          setuserLogin(res.data.token);
+          setUserToken(res.data.token);
+          myQuery.invalidateQueries(["getUserData"]);
           navigate("/");
         }
       })
@@ -95,7 +97,6 @@ export default function Login() {
             ""
           )}
         </div>
-
         <button
           disabled={isLoading}
           type="submit"

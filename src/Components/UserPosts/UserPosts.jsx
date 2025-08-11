@@ -1,22 +1,40 @@
 import React from "react";
 import "./UserPosts.module.css";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { Link, useParams } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Comment from "./../Comment/Comment";
 import CreateComment from "./../CreateComment/CreateComment";
-export default function UserPosts() {
+import toast from "react-hot-toast";
+import CreatePost from "../CreatePost/CreatePost";
+import PostOptions from "./../PostOptions/PostOptions";
+export default function UserPosts({ id }) {
+  const queryClient = useQueryClient();
   const getUserPost = () =>
-    axios.get(
-      `https://linked-posts.routemisr.com/users/664bcf3e33da217c4af21f00/posts?limit=2`,
-      {
-        headers: { token: localStorage.getItem("userToken") },
-      }
-    );
+    axios.get(`https://linked-posts.routemisr.com/users/${id}/posts`, {
+      headers: { token: localStorage.getItem("userToken") },
+    });
   let { data, isError, error, isLoading } = useQuery({
     queryKey: ["getUserPost"],
     queryFn: getUserPost,
   });
+  async function deletePost(postid) {
+    try {
+      let res = await axios.delete(
+        `https://linked-posts.routemisr.com/posts/${postid}`,
+        {
+          headers: {
+            token: localStorage.getItem("userToken"),
+          },
+        }
+      );
+      toast.success("Post deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["getUserPost"] });
+    } catch (err) {
+      toast.error("can't delete this post");
+    }
+  }
+
   if (isError) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
@@ -28,8 +46,8 @@ export default function UserPosts() {
   }
   if (isLoading) {
     return (
-      <div>
-        <div className="w-full mx-auto md:w-[70%] lg:w-[60%] my-12 py-6 px-3.5 rounded-xl animate-pulse bg-radial from-cyan-800 to-cyan-900">
+      <div className="pt-14">
+        <div className="w-full mx-auto md:w-[70%] lg:w-[50%] my-12 py-6 px-3.5 rounded-xl animate-pulse bg-radial from-cyan-800 to-cyan-900">
           <div className="post">
             <div className="mb-3">
               <div className="flex items-center gap-4">
@@ -44,7 +62,7 @@ export default function UserPosts() {
             </div>
             <>
               <h3 className="h-3 bg-gray-300 rounded-full w-full mb-4"></h3>
-              <div className="animate-pulse w-full bg-gray-300 h-[500px] rounded-lg mb-5 flex justify-center items-center">
+              <div className="animate-pulse w-full bg-gray-300 h-96 rounded-lg mb-5 flex justify-center items-center">
                 <svg
                   className="w-8 h-8 stroke-gray-400"
                   viewBox="0 0 24 24"
@@ -75,26 +93,34 @@ export default function UserPosts() {
     );
   }
   return (
-    <div className="py-12">
+    <div>
+      <CreatePost />
       {data?.data?.posts.map((post) => (
         <div
           key={post.id}
-          className="w-full mx-auto md:w-[70%] lg:w-[45%] my-12 py-6 px-3.5 rounded-xl bg-radial from-cyan-800 to-cyan-900 text-white"
+          className="w-full mx-auto md:w-[70%] lg:w-[50%] my-12 py-6 px-3.5 rounded-xl bg-radial from-cyan-800 to-cyan-900 text-white"
         >
           <div className="post">
             <div className="mb-3">
-              <div className="flex items-center gap-4">
-                <img
-                  src={post.user.photo}
-                  className="size-14 rounded-full border-2 bg-white border-slate-900"
-                  alt={post.user.photo}
-                />
-                <div>
-                  <span className="text-lg font-[600]">{post.user.name}</span>
-                  <p className=" text-slate-300 text-xs">
-                    {new Date(post.createdAt).toLocaleString()}
-                  </p>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-4">
+                  <img
+                    src={post.user.photo}
+                    className="size-14 rounded-full border-2 bg-white border-slate-900"
+                    alt={post.user.photo}
+                  />
+                  <div>
+                    <span className="text-lg font-[600]">{post.user.name}</span>
+                    <p className=" text-slate-300 text-xs">
+                      {new Date(post.createdAt).toLocaleString()}
+                    </p>
+                  </div>
                 </div>
+                <PostOptions
+                  id={post._id}
+                  body={post.body}
+                  image={post.image}
+                />
               </div>
             </div>
             {post.image ? (
@@ -111,18 +137,13 @@ export default function UserPosts() {
             ) : (
               <h3 className="mt-4">{post.body}</h3>
             )}
-            <Comment comment={post.comments[0]} />
+            {post?.comments.length > 0 && (
+              <>
+                <Comment comment={post?.comments[0]} />
+              </>
+            )}
           </div>
-          <hr className="mt-2 mx-4 border-1 border-gray-400" />
-          <div className="flex justify-between mx-4">
-            <CreateComment postId={post.id} />
-            <Link
-              to={`/singlePost/${post.id}`}
-              className="text-center text-gray-300 cursor-pointer sm:text-lg text-sm mt-2 hover:text-white hover:underline hover:underline-offset-3 duration-300"
-            >
-              Show All Comments
-            </Link>
-          </div>
+          <CreateComment postId={post?.id} />
         </div>
       ))}
     </div>

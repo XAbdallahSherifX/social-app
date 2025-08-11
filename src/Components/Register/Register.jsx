@@ -52,7 +52,6 @@ export default function Register() {
 
   function sendUserData(values) {
     setisLoading(true);
-    console.log(values);
     axios
       .post(`https://linked-posts.routemisr.com/users/signup`, values)
       .then((res) => {

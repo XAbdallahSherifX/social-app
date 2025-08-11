@@ -5,6 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Comment from "./../Comment/Comment";
 import CreateComment from "./../CreateComment/CreateComment";
+import { useContext } from "react";
+import { UserDataContext } from "../../Context/UserDataContext";
+import PostOptions from "./../PostOptions/PostOptions";
 export default function SinglePost() {
   let { id } = useParams();
   const getSinglePost = () =>
@@ -15,7 +18,9 @@ export default function SinglePost() {
     queryKey: ["getSinglePost"],
     queryFn: getSinglePost,
     select: (data) => data?.data?.post,
+    gcTime: 1000,
   });
+  let { userData } = useContext(UserDataContext);
   if (isError) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
@@ -96,42 +101,51 @@ export default function SinglePost() {
       <div className="w-full mx-auto md:w-[70%] lg:w-[60%] my-12 py-6 px-3.5 rounded-xl bg-radial from-cyan-800 to-cyan-900 text-white">
         <div className="data">
           <div className="mb-3">
-            <div className="flex items-center gap-4">
-              <img
-                src={data.user.photo}
-                className="size-14 rounded-full border-2 border-slate-900"
-                alt={data.user.photo}
-              />
-              <div>
-                <span className="text-lg font-[600]">{data.user.name}</span>
-                <p className=" text-slate-300 text-xs">
-                  {new Date(data.createdAt).toLocaleString()}
-                </p>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <img
+                  src={data?.user?.photo}
+                  className="size-14 rounded-full border-2 border-slate-900"
+                  alt={data?.user?.photo}
+                />
+                <div>
+                  <span className="text-lg font-[600]">{data?.user?.name}</span>
+                  <p className=" text-slate-300 text-xs">
+                    {new Date(data?.createdAt).toLocaleString()}
+                  </p>
+                </div>
               </div>
+              {userData?._id === data?.user?._id ? (
+                <PostOptions
+                  id={data?.id}
+                  body={data?.body}
+                  image={data?.image}
+                />
+              ) : (
+                ""
+              )}
             </div>
           </div>
-          {data.image ? (
+          {data?.image ? (
             <>
-              <h3 className="mb-4 text-lg sm:text-xl">{data.body}</h3>
+              <h3 className="mb-4 text-lg sm:text-xl">{data?.body}</h3>
               <img
-                src={data.image}
+                src={data?.image}
                 className="w-full object-cover bg-white max-h-[500px] border-[2px] border-slate-400 rounded-xl"
-                alt={data.body}
+                alt={data?.body}
               />
             </>
           ) : (
-            <h3 className="mt-4">{data.body}</h3>
+            <h3 className="mt-4">{data?.body}</h3>
           )}
         </div>
-
-        <div className="flex justify-between">
-          <CreateComment postId={data.id} />
+        <div className="flex justify-between items-baseline">
+          <CreateComment postId={data?.id} />
           <h1 className="text-center text-gray-300 sm:text-lg text-sm mt-2">
-            {data.comments.length} Comments
+            {data?.comments?.length} Comments
           </h1>
         </div>
-        <hr className="mt-2 border-1 border-gray-400" />
-        {data.comments.map((comment) => (
+        {data?.comments?.map((comment) => (
           <Comment key={comment._id} comment={comment} />
         ))}
       </div>

@@ -6,12 +6,17 @@ import Profile from "./Components/Profile/Profile";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import NotFound from "./Components/NotFound/NotFound";
-import UserContextProvider from "./Context/UserContext";
+import UserTokenContextProvider from "./Context/UserToken";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import PostContextProvider from "./Context/PostContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import SinglePost from "./Components/SinglePost/SinglePost";
+import { Toaster } from "react-hot-toast";
+import UserDataContextProvider, {
+  UserDataContext,
+} from "./Context/UserDataContext";
+
 const query = new QueryClient();
 const x = createBrowserRouter([
   {
@@ -51,14 +56,17 @@ const x = createBrowserRouter([
 export default function App() {
   return (
     <>
-      <UserContextProvider>
-          <PostContextProvider>
-            <QueryClientProvider client={query}>
+      <UserTokenContextProvider>
+        <PostContextProvider>
+          <QueryClientProvider client={query}>
+            <UserDataContextProvider>
               <RouterProvider router={x}></RouterProvider>
               <ReactQueryDevtools />
-            </QueryClientProvider>
-          </PostContextProvider>
-      </UserContextProvider>
+              <Toaster />
+            </UserDataContextProvider>
+          </QueryClientProvider>
+        </PostContextProvider>
+      </UserTokenContextProvider>
     </>
   );
 }

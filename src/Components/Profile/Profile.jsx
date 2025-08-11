@@ -2,7 +2,10 @@ import React from "react";
 import "./Profile.module.css";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import UserPosts from './../UserPosts/UserPosts';
+import UserPosts from "./../UserPosts/UserPosts";
+import ChangePassModal from "../ChangePassword/ChangePassword";
+import UploadProfilePhoto from "../UploadProfilePhoto/UploadProfilePhoto";
+import ChangePassword from "./../ChangePassword/ChangePassword";
 export default function Profile() {
   const getUserData = () =>
     axios.get("https://linked-posts.routemisr.com/users/profile-data", {
@@ -12,8 +15,8 @@ export default function Profile() {
     queryKey: ["getUserData"],
     queryFn: getUserData,
     select: (data) => data?.data?.user,
-  });  
-  if(isLoading){
+  });
+  if (isLoading) {
     return (
       <div className="h-screen absolute top-0 left-0 right-0 bottom-0 flex w-full justify-center items-center">
         <span className="loader"></span>
@@ -72,25 +75,29 @@ export default function Profile() {
             </div>
             <div className="lg:w-5/12 w-full sm:text-2xl text-lg">
               <span className=" px-1">Email :</span>
-              <div className="w-full bg-slate-600 p-3 rounded-2xl sm:text-2xl text-lg">
+              <div className="w-full bg-slate-600 p-3 rounded-2xl sm:text-2xl text-lg break-all">
                 {data?.email}
               </div>
             </div>
             <div className="lg:w-5/12 w-full sm:text-2xl text-lg">
               <span className=" px-1">Password :</span>
-              <div className="w-full bg-slate-600 p-3 rounded-2xl sm:text-2xl text-lg relative">
-                <span>••••••••••••</span>
-                <div className="absolute top-1/2 right-2 -translate-y-1/2">
-                  <div className="hover:bg-white hover:text-black cursor-pointer duration-300 rounded-2xl p-2 flex items-center justify-center">
-                    <i className="fa-solid fa-pen-to-square"></i>
-                  </div>
+              <div className="w-full bg-slate-600 p-3 rounded-2xl sm:text-2xl text-lg">
+                <div className="flex justify-between items-center">
+                  <span>••••••••••••</span>
                 </div>
               </div>
             </div>
+            <div className="lg:w-5/12 w-full sm:text-2xl text-lg">
+              <ChangePassword />
+            </div>
+            <div className="lg:w-5/12 w-full sm:text-2xl text-lg">
+              <UploadProfilePhoto />
+            </div>
+            <div className="flex justify-between items-center max-sm:flex-col w-full gap-y-4"></div>
           </div>
         </div>
       </div>
-      <UserPosts/>
+      <UserPosts id={data._id} />
     </div>
   );
 }
