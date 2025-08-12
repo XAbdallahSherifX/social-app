@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./CommentOptions.module.css";
 import EditComment from "./../EditComment/EditComment";
 import DeleteComment from "./../DeleteComment/DeleteComment";
-export default function CommentOptions({ id, content }) {
+import { UserDataContext } from "../../Context/UserDataContext";
+export default function CommentOptions({
+  id,
+  content,
+  postCreatorId,
+  commentCreator,
+  myId,
+}) {
   const [optionsModalAppearance, setOptionsModalAppearance] = useState(false);
+  let { userData } = useContext(UserDataContext);
+
   return (
     <>
       <div
@@ -28,12 +37,24 @@ export default function CommentOptions({ id, content }) {
                 </button>
               </div>
               <div className="p-4 md:p-5">
-                <EditComment
-                  id={id}
-                  content={content}
-                  closeAll={setOptionsModalAppearance}
-                />
-                <DeleteComment id={id} closeAll={setOptionsModalAppearance} />
+                {commentCreator === myId ? (
+                  <EditComment
+                    id={id}
+                    content={content}
+                    closeAll={setOptionsModalAppearance}
+                  />
+                ) : (
+                  ""
+                )}
+                {postCreatorId == userData._id ? (
+                  <DeleteComment
+                    id={id}
+                    postCreatorId={postCreatorId}
+                    closeAll={setOptionsModalAppearance}
+                  />
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>

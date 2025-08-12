@@ -130,7 +130,10 @@ export default function Home() {
             )}
             {post?.comments.length > 0 && (
               <>
-                <Comment comment={post?.comments[0]} />
+                <Comment
+                  comment={post?.comments[0]}
+                  postCreatorId={post?.user?._id}
+                />
               </>
             )}
           </div>

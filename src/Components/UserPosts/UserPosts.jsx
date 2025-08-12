@@ -139,7 +139,7 @@ export default function UserPosts({ id }) {
             )}
             {post?.comments.length > 0 && (
               <>
-                <Comment comment={post?.comments[0]} />
+                <Comment comment={post?.comments[0]} postCreatorId={post.user._id} />
               </>
             )}
           </div>

@@ -146,7 +146,11 @@ export default function SinglePost() {
           </h1>
         </div>
         {data?.comments?.map((comment) => (
-          <Comment key={comment._id} comment={comment} />
+          <Comment
+            key={comment._id}
+            comment={comment}
+            postCreatorId={data.user._id}
+          />
         ))}
       </div>
     </div>

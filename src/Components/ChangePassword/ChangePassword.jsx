@@ -27,7 +27,7 @@ export default function ChangePassword() {
       .then((res) => {
         if (res.data.message === "success") {
           localStorage.setItem("userToken", res.data.token);
-          toast.success("password changed successfully");
+          toast.success("password is changed successfully");
           setIsLoading(false);
         }
       })

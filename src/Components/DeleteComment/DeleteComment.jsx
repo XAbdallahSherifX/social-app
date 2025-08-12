@@ -10,7 +10,7 @@ export default function DeleteComment({ closeAll, id }) {
   let myQuery = useQueryClient();
   let location = useLocation();
   let navigate = useNavigate();
-  function deletePost() {
+  function deleteComment() {
     setIsLoading(true);
     axios
       .delete(`https://linked-posts.routemisr.com/comments/${id}`, {
@@ -24,7 +24,7 @@ export default function DeleteComment({ closeAll, id }) {
         toast.success("Comment is deleted successfully");
         myQuery.invalidateQueries(["getPosts", "getUserPost", "getSinglePost"]);
       })
-      .catch(() => {
+      .catch((err) => {
         setIsLoading(false);
         toast.error("Can not delete this comment");
       });
@@ -36,7 +36,7 @@ export default function DeleteComment({ closeAll, id }) {
         className="py-4 px-8 text-xl w-full mt-3 bg-red-600 flex items-baseline gap-x-2 justify-center rounded-xl cursor-pointer relative overflow-hidden transition-all duration-300  shadow-md hover:-translate-y-0 active:translate-y-1 hover:shadow-lg before:absolute  before:top-0 before:-left-full before:w-full before:h-full before:bg-slate-200 hover:text-black font-bold before:transition-all before:duration-300  before:z-[-1] before:rounded-xl hover:before:left-0 text-[#fff]"
         type="button"
       >
-        <span>Delete Post</span>
+        <span>Delete Comment</span>
         <i className="fa-solid fa-trash"></i>
       </button>
       {deleteConfirmationModal && (
@@ -44,7 +44,7 @@ export default function DeleteComment({ closeAll, id }) {
           <div className="relative p-4 w-full max-w-md max-h-full">
             <div className="relative bg-slate-800 rounded-lg shadow-sm">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-600">
-                <div className="text-xl sm:text-3xl">Delete Post</div>
+                <div className="text-xl sm:text-3xl">Delete Comment</div>
                 <button
                   onClick={() => setDeleteConfirmationModal(false)}
                   type="button"
@@ -57,7 +57,7 @@ export default function DeleteComment({ closeAll, id }) {
               <div className="p-4 md:p-5">
                 <button
                   disabled={isLoading}
-                  onClick={() => deletePost()}
+                  onClick={() => deleteComment()}
                   className="py-4 px-8 text-xl w-full mt-3 bg-red-600 flex items-center justify-center rounded-xl cursor-pointer relative overflow-hidden transition-all duration-300  shadow-md hover:-translate-y-0 active:translate-y-1 hover:shadow-lg before:absolute  before:top-0 before:-left-full before:w-full before:h-full before:bg-slate-200 hover:text-black font-bold before:transition-all before:duration-300  before:z-[-1] before:rounded-xl hover:before:left-0 text-[#fff] disabled:before:bg-red-600 disabled:cursor-no-drop"
                   type="button"
                 >
