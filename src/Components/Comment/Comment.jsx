@@ -3,11 +3,12 @@ import "./Comment.module.css";
 import defaultUserImage from "../../assets/istockphoto-1332100919-612x612.jpg";
 import { UserDataContext } from "./../../Context/UserDataContext";
 import CommentOptions from "./../CommentOptions/CommentOptions";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 export default function Comment({ comment, postCreatorId }) {
   let { commentCreator, content, createdAt, _id } = comment;
   let { userData } = useContext(UserDataContext);
   let location = useLocation();
+  let { id } = useParams();
   return (
     <div className="mt-2 bg-slate-900 w-full rounded-xl overflow-auto">
       <div className="mx-2 my-4 p-2">
@@ -33,7 +34,9 @@ export default function Comment({ comment, postCreatorId }) {
               <h1 className="sm:text-sm text-[0.5rem] text-gray-300 font-light">
                 {new Date(createdAt).toLocaleString()}
               </h1>
-              {commentCreator?._id === userData._id || location.pathname.includes("/profile") ? (
+              {commentCreator?._id === userData._id ||
+              location.pathname.includes("/profile") ||
+              comment.post == id ? (
                 <CommentOptions
                   id={_id}
                   content={content}
