@@ -11,7 +11,7 @@ import { UserDataContext } from "./../../Context/UserDataContext";
 export default function Home() {
   let { userData } = useContext(UserDataContext);
   const getPosts = () =>
-    axios.get("https://linked-posts.routemisr.com/posts?page=111&limit=50", {
+    axios.get("https://linked-posts.routemisr.com/posts?limit=50", {
       headers: { token: localStorage.getItem("userToken") },
     });
   let { data, error, isError, isLoading } = useQuery({

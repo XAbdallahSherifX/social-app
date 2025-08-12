@@ -8,7 +8,6 @@ export default function CommentOptions({
   content,
   postCreatorId,
   commentCreator,
-  myId,
 }) {
   const [optionsModalAppearance, setOptionsModalAppearance] = useState(false);
   let { userData } = useContext(UserDataContext);
@@ -37,7 +36,7 @@ export default function CommentOptions({
                 </button>
               </div>
               <div className="p-4 md:p-5">
-                {commentCreator === myId ? (
+                {commentCreator === userData._id ? (
                   <EditComment
                     id={id}
                     content={content}
