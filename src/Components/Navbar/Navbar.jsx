@@ -5,16 +5,9 @@ import myImage from "../../assets/istockphoto-1332100919-612x612.jpg";
 import { UserTokenContext } from "../../Context/UserToken";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import useUserData from "../../Hooks/useUserData";
 export default function Navbar() {
-  const getUserData = () =>
-    axios.get("https://linked-posts.routemisr.com/users/profile-data", {
-      headers: { token: localStorage.getItem("userToken") },
-    });
-  let { data } = useQuery({
-    queryKey: ["getUserData"],
-    queryFn: getUserData,
-    select: (data) => data?.data?.user,
-  });
+  let { data } = useUserData();
   let navigate = useNavigate();
   let { userToken, setUserToken } = useContext(UserTokenContext);
   function signout() {
@@ -39,7 +32,7 @@ export default function Navbar() {
               <div className={`items-center`}>
                 {userToken !== null ? (
                   <div
-                    onBlur={() => setMenuAppearance(false)}
+                    onBlur={(e) => setMenuAppearance(false)}
                     onClick={() => showMenu()}
                     tabIndex={0}
                     className={`w-[40px] h-[40px] border-0 outline-1  rounded-3xl cursor-pointer focus:outline-4`}

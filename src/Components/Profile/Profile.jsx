@@ -6,16 +6,9 @@ import UserPosts from "./../UserPosts/UserPosts";
 import ChangePassModal from "../ChangePassword/ChangePassword";
 import UploadProfilePhoto from "../UploadProfilePhoto/UploadProfilePhoto";
 import ChangePassword from "./../ChangePassword/ChangePassword";
+import useUserData from "../../Hooks/useUserData";
 export default function Profile() {
-  const getUserData = () =>
-    axios.get("https://linked-posts.routemisr.com/users/profile-data", {
-      headers: { token: localStorage.getItem("userToken") },
-    });
-  let { data, error, isError, isLoading } = useQuery({
-    queryKey: ["getUserData"],
-    queryFn: getUserData,
-    select: (data) => data?.data?.user,
-  });
+  let { data, error, isError, isLoading } = useUserData();
   if (isLoading) {
     return (
       <div className="h-screen absolute top-0 left-0 right-0 bottom-0 flex w-full justify-center items-center">
