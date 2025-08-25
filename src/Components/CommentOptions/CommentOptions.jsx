@@ -36,7 +36,7 @@ export default function CommentOptions({
                 </button>
               </div>
               <div className="p-4 md:p-5">
-                {commentCreator === userData._id ? (
+                {commentCreator === userData?._id ? (
                   <EditComment
                     id={id}
                     content={content}
@@ -45,7 +45,7 @@ export default function CommentOptions({
                 ) : (
                   ""
                 )}
-                {postCreatorId == userData._id ? (
+                {postCreatorId == userData?._id ? (
                   <DeleteComment
                     id={id}
                     postCreatorId={postCreatorId}

@@ -31,7 +31,7 @@ export default function Comment({ comment, postCreatorId }) {
               <h1 className="sm:text-sm text-[0.5rem] text-gray-300 font-light">
                 {new Date(createdAt).toLocaleString()}
               </h1>
-              {commentCreator?._id === userData._id ||
+              {commentCreator?._id === userData?._id ||
               postCreatorId == userData._id ? (
                 <CommentOptions
                   id={_id}
