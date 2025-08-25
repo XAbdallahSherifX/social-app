@@ -128,7 +128,7 @@ export default function SinglePost() {
           </div>
           {data?.image ? (
             <>
-              <h3 className="mb-4 text-lg sm:text-xl">{data?.body}</h3>
+              <h3 className="mb-4 text-lg sm:text-xl break-all">{data?.body}</h3>
               <img
                 src={data?.image}
                 className="w-full object-cover bg-white max-h-[500px] border-[2px] border-slate-400 rounded-xl"
@@ -136,7 +136,7 @@ export default function SinglePost() {
               />
             </>
           ) : (
-            <h3 className="mt-4">{data?.body}</h3>
+            <h3 className="mt-4 break-all">{data?.body}</h3>
           )}
         </div>
         <div className="flex justify-between items-baseline">

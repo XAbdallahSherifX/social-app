@@ -116,7 +116,7 @@ export default function Home() {
             </div>
             {post.image ? (
               <>
-                <h3 className="mb-4 text-lg sm:text-xl">{post.body}</h3>
+                <h3 className="mb-4 text-lg sm:text-xl break-all">{post.body}</h3>
                 <Link to={`/singlePost/${post.id}`}>
                   <img
                     src={post.image}
@@ -126,7 +126,7 @@ export default function Home() {
                 </Link>
               </>
             ) : (
-              <h3 className="mt-4">{post.body}</h3>
+              <h3 className="mt-4 break-all">{post.body}</h3>
             )}
             {post?.comments.length > 0 && (
               <>
